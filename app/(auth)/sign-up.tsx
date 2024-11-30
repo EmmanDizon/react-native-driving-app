@@ -30,6 +30,27 @@ const SignUp = () => {
             value={form.name}
             onChangeText={(value: string) => setForm({ ...form, name: value })}
           />
+
+          <InputField
+            label="Email"
+            labelStyle="text-lg"
+            placeholder="Enter your email"
+            icon={icons.email}
+            value={form.email}
+            onChangeText={(value: string) => setForm({ ...form, email: value })}
+          />
+
+          <InputField
+            label="Password"
+            labelStyle="text-lg"
+            placeholder="Enter your password"
+            icon={icons.lock}
+            secureTextEntry={true}
+            value={form.password}
+            onChangeText={(value: string) =>
+              setForm({ ...form, password: value })
+            }
+          />
         </View>
       </View>
     </ScrollView>
