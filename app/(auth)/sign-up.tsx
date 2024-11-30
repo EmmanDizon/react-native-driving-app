@@ -1,4 +1,6 @@
+import { useSignUp } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 
@@ -8,14 +10,63 @@ import OAuth from "@/components/OAuth";
 import { icons, images } from "@/constants";
 
 const SignUp = () => {
+  const [verification, setVerification] = useState({
+    state: "default",
+    error: "",
+    code: "",
+  });
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
   });
+  const { isLoaded, signUp, setActive } = useSignUp();
 
   const onSignUpPress = async () => {
-    console.log(form);
+    if (!isLoaded) {
+      return;
+    }
+
+    try {
+      await signUp.create({
+        emailAddress: form.email,
+        password: form.password,
+      });
+
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+
+      setVerification({ ...verification, state: "pending" });
+    } catch (err: any) {
+      console.error(JSON.stringify(err, null, 2));
+    }
+  };
+
+  const onPressVerify = async () => {
+    if (!isLoaded) return;
+
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code: verification.code,
+      });
+
+      if (completeSignUp.status === "complete") {
+        await setActive({ session: completeSignUp.createdSessionId });
+        setVerification({ ...verification, state: "success" });
+        router.replace("/");
+      } else {
+        setVerification({
+          ...verification,
+          state: "failed",
+          error: "Verification failed",
+        });
+      }
+    } catch (err: any) {
+      setVerification({
+        ...verification,
+        state: "failed",
+        error: err.errors[0].longMessage,
+      });
+    }
   };
 
   return (
@@ -65,7 +116,7 @@ const SignUp = () => {
             className="mt-6"
           />
 
-          <OAuth />
+          <OAuth title="Signup with Google" />
 
           <Link
             href="/sign-in"

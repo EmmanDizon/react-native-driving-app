@@ -4,7 +4,7 @@ import { icons } from "@/constants";
 
 import CustomButton from "./CustomButton";
 
-const OAuth = () => {
+const OAuth = ({ title }: { title: string }) => {
   const handleGoogleSignIn = async () => {};
 
   return (
@@ -16,7 +16,7 @@ const OAuth = () => {
       </View>
 
       <CustomButton
-        title="Continue with Google"
+        title={title}
         className="mt-5 w-full shadow-none"
         IconLeft={() => (
           <Image
