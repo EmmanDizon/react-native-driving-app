@@ -4,6 +4,7 @@ import { Image, ScrollView, Text, View } from "react-native";
 
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
+import OAuth from "@/components/OAuth";
 import { icons, images } from "@/constants";
 
 const SignUp = () => {
@@ -63,6 +64,8 @@ const SignUp = () => {
             onPress={() => onSignUpPress()}
             className="mt-6"
           />
+
+          <OAuth />
 
           <Link
             href="/sign-in"
